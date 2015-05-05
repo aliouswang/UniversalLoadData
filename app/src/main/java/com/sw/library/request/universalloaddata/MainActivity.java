@@ -1,6 +1,7 @@
 package com.sw.library.request.universalloaddata;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,12 +22,14 @@ public class MainActivity extends ActionBarActivity {
     public static final String TAG = "loader";
 
     Button button;
+    Button upload_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         button = (Button) findViewById(R.id.button);
+        upload_button = (Button) findViewById(R.id.upload_button);
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -52,6 +55,35 @@ public class MainActivity extends ActionBarActivity {
                             public void loadFailed(String url, String response) {
                             }
                         },true, ActivityDetail.class);
+            }
+        });
+
+        upload_button.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                String dirStr = Environment.getExternalStorageDirectory() + "/loaderimage/";
+                String [] files = {dirStr + "ws_icon.png", dirStr + "audio_play_ic.png",
+                        dirStr + "green_right_arrow_ic.png", dirStr + "Untitled.jpg"};
+                String url = "http://beta.home.ddmap.com/homeServer/common/uploadImage.do";
+                UniversalLoader.getDefault().uploadFiles(MainActivity.this,
+                        url, files, new UniversalLoadListener(){
+
+                            @Override
+                            public void preLoad() {
+
+                            }
+
+                            @Override
+                            public void loadSuccess(String url, String response, UniversalResult result) {
+                                Log.e("loader", response);
+                            }
+
+                            @Override
+                            public void loadFailed(String url, String response) {
+                                Log.e("loader", response);
+                            }
+                        });
             }
         });
     }
